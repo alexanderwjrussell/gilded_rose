@@ -27,6 +27,23 @@ describe GildedRose do
       expect(quality_before > quality_after).to eq true
     end
 
-  end
+    it "should decrease the sell_in at the end of the day" do
+      sell_before = @gilded_rose.items[0].sell_in
+      @gilded_rose.update_quality
+      sell_after = @gilded_rose.items[0].sell_in
+      expect(sell_before > sell_after).to eq true
+    end
 
+    it "should decrease quality twice as fast when out of date" do
+      item = @gilded_rose.items[0]
+      initial_quality = item.quality
+      item.sell_in = 1
+      @gilded_rose.update_quality
+      middle_quality = item.quality
+      @gilded_rose.update_quality
+      initial_difference = initial_quality - middle_quality
+      final_difference = middle_quality - item.quality
+      expect(final_difference == 2*initial_difference).to eq(true)
+    end
+  end
 end
