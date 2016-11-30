@@ -46,17 +46,17 @@ describe GildedRose do
       expect(final_difference == 2*initial_difference).to eq(true)
     end
 
-    it "The quality of an item should never be less than zero" do
+    it "should never have a quality less than zero" do
       item = @gilded_rose.items[0]
       item.quality = 0
       @gilded_rose.update_quality
       expect(item.quality == 0).to eq(true)
     end
 
-    it "Aged brie increases in quality the older it gets" do
+    it "should increase aged brie in quality the older it gets" do
       item = @gilded_rose.items[1]
       initial_quality = item.quality
-      @gilded_rose.end_of_day
+      @gilded_rose.update_quality
       expect(item.quality > initial_quality).to eq(true)
     end
   end
