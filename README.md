@@ -47,3 +47,11 @@ Feel free to make any changes to the UpdateQuality method and add any new code a
   - [x] “Sulfuras”, being a legendary item, never has to be sold or decreases in Quality
   - [x] “Backstage passes”, like aged brie, increases in Quality as it’s SellIn value approaches; Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but Quality drops to 0 after the concert
   - [x] “Conjured” items degrade in Quality twice as fast as normal items
+
+### Future Developments
+- [ ] Refactor using the strategy pattern
+  - [ ] Default strategy
+  - [ ] Brie strategy
+  - [ ] Sulfuras strategy
+  - [ ] Backstage passes strategy
+  - [ ] Conjured strategy
