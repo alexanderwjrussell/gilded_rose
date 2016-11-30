@@ -1,5 +1,6 @@
 require_relative 'item'
 require_relative 'item_checker'
+require_relative 'update_calculator'
 
 class GildedRose
 
@@ -8,6 +9,7 @@ class GildedRose
   def initialize(items)
     @items = items
     @item_checker = ItemChecker.new
+    @update_calculator = UpdateCalculator.new
   end
 
   def update_stock
@@ -34,36 +36,25 @@ class GildedRose
   end
 
   def increase_quality(item)
+    item.quality += calculate_increase(item)
+
     if @item_checker.expired?(item.sell_in)
-      return item.quality = 0
+      item.quality = 0
     end
+  end
 
+  def calculate_increase(item)
     if @item_checker.is_backstage_pass?(item.name)
-      if item.sell_in <= 5
-        return item.quality += 3
-      end
-      if item.sell_in <= 10
-        return item.quality += 2
-      end
-      return item.quality += 1
+      @update_calculator.backstage_increase(item.sell_in)
+    else
+      @update_calculator.increase(item)
     end
 
-    if item.quality >= 50
-      return item.quality += 0
-    end
-    return item.quality += 1
   end
 
   def decrease_quality(item)
-    if item.quality > 0
-      if @item_checker.is_conjured?(item.name)
-        return item.quality -= 2
-      end
-
-      if item.sell_in == 0
-        return item.quality -= 2
-      end
-      item.quality -= 1
+    if item.quality - @update_calculator.decrease(item, @item_checker.is_conjured?(item.name)) >= 0
+      item.quality -= @update_calculator.decrease(item, @item_checker.is_conjured?(item.name))
     end
   end
 end
