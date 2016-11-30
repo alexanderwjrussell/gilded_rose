@@ -66,5 +66,11 @@ describe GildedRose do
       @gilded_rose.update_quality
       expect(item.quality == 50).to eq(true)
     end
+
+    it "Sulfuras is never sold and never decreases in quality" do
+      item = @gilded_rose.items[3]
+      @gilded_rose.update_quality
+      expect(item.quality == 80 && item.sell_in == 0).to eq(true)
+    end
   end
 end
