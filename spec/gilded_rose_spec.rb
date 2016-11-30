@@ -95,5 +95,12 @@ describe GildedRose do
       @gilded_rose.update_quality
       expect(item.quality).to eq(0)
     end
+
+    it "should ensure conjured items decrease in quality twice as fast" do
+      item = @gilded_rose.items[5]
+      initial_quality = item.quality
+      @gilded_rose.update_quality
+      expect(item.quality == initial_quality - 2).to eq(true)
+    end
   end
 end
