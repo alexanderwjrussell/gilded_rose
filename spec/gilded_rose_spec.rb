@@ -52,5 +52,12 @@ describe GildedRose do
       @gilded_rose.update_quality
       expect(item.quality == 0).to eq(true)
     end
+
+    it "Aged brie increases in quality the older it gets" do
+      item = @gilded_rose.items[1]
+      initial_quality = item.quality
+      @gilded_rose.end_of_day
+      expect(item.quality > initial_quality).to eq(true)
+    end
   end
 end
