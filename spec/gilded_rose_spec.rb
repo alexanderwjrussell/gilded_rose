@@ -45,5 +45,12 @@ describe GildedRose do
       final_difference = middle_quality - item.quality
       expect(final_difference == 2*initial_difference).to eq(true)
     end
+
+    it "The quality of an item should never be less than zero" do
+      item = @gilded_rose.items[0]
+      item.quality = 0
+      @gilded_rose.update_quality
+      expect(item.quality == 0).to eq(true)
+    end
   end
 end
