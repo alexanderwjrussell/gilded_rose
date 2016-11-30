@@ -1,4 +1,5 @@
 require_relative 'item'
+require_relative 'item_checker'
 
 class GildedRose
 
@@ -6,61 +7,63 @@ class GildedRose
 
   def initialize(items)
     @items = items
+    @item_checker = ItemChecker.new
   end
 
   def update_stock
     @items.each do |item|
       if item.name != "Sulfuras, Hand of Ragnaros"
-        update_sell_in(item)
         update_quality(item)
+        update_sell_in(item)
       end
     end
   end
 
   def update_quality(item)
-    if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
-      if item.quality > 0
-        if item.name != "Sulfuras, Hand of Ragnaros"
-          item.quality = item.quality - 1
-        end
-      end
+    if (@item_checker.increases_over_time?(item.name))
+      increase_quality(item)
     else
-      if item.quality < 50
-        item.quality = item.quality + 1
-        if item.name == "Backstage passes to a TAFKAL80ETC concert"
-          if item.sell_in < 11
-            if item.quality < 50
-              item.quality = item.quality + 1
-            end
-          end
-          if item.sell_in < 6
-            if item.quality < 50
-              item.quality = item.quality + 1
-            end
-          end
-        end
-      end
-    end
-    if item.sell_in < 0
-      if item.name != "Aged Brie"
-        if item.name != "Backstage passes to a TAFKAL80ETC concert"
-          if item.quality > 0
-            if item.name != "Sulfuras, Hand of Ragnaros"
-              item.quality = item.quality - 1
-            end
-          end
-        else
-          item.quality = item.quality - item.quality
-        end
-      else
-        if item.quality < 50
-          item.quality = item.quality + 1
-        end
-      end
+      decrease_quality(item)
     end
   end
 
   def update_sell_in(item)
-    item.sell_in -= 1
+    if item.sell_in > 0
+      item.sell_in -= 1
+    end
+  end
+
+  def increase_quality(item)
+    if @item_checker.expired?(item.sell_in)
+      return item.quality = 0
+    end
+
+    if @item_checker.is_backstage_pass?(item.name)
+      if item.sell_in <= 5
+        return item.quality += 3
+      end
+      if item.sell_in <= 10
+        return item.quality += 2
+      end
+      return item.quality += 1
+    end
+
+    if item.quality >= 50
+      return item.quality += 0
+    end
+    return item.quality += 1
+  end
+
+  def decrease_quality(item)
+    if item.quality > 0
+      if @item_checker.is_conjured?(item.name)
+        return item.quality -= 2
+      end
+
+      if item.sell_in == 0
+        return item.quality -= 2
+      end
+      item.quality -= 1
+    end
   end
 end
