@@ -59,5 +59,12 @@ describe GildedRose do
       @gilded_rose.update_quality
       expect(item.quality > initial_quality).to eq(true)
     end
+
+    it "should not allow an items quality to become more than 50" do
+      item = @gilded_rose.items[1]
+      item.quality = 50
+      @gilded_rose.update_quality
+      expect(item.quality == 50).to eq(true)
+    end
   end
 end
