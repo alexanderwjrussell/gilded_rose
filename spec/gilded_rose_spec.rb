@@ -67,10 +67,33 @@ describe GildedRose do
       expect(item.quality == 50).to eq(true)
     end
 
-    it "Sulfuras is never sold and never decreases in quality" do
+    it "should ensure Sulfuras is never sold and never decreases in quality" do
       item = @gilded_rose.items[3]
       @gilded_rose.update_quality
       expect(item.quality == 80 && item.sell_in == 0).to eq(true)
+    end
+
+    it "should increase Backstage passes in quality by 2 when 10 days or less" do
+      item = @gilded_rose.items[4]
+      item.sell_in = 9
+      initial_quality = item.quality
+      @gilded_rose.update_quality
+      expect(initial_quality == item.quality-2).to eq(true)
+    end
+
+    it "should increase Backstage passes in quality by 3 when 5 days or less" do
+      item = @gilded_rose.items[4]
+      item.sell_in = 4
+      initial_quality = item.quality
+      @gilded_rose.update_quality
+      expect(initial_quality == item.quality-3).to eq(true)
+    end
+
+    it "should reduce Backstage passes to have 0 quality when sell_in is 0" do
+      item = @gilded_rose.items[4]
+      item.sell_in = 0
+      @gilded_rose.update_quality
+      expect(item.quality).to eq(0)
     end
   end
 end
